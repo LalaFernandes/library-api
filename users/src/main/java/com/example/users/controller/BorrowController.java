@@ -71,4 +71,22 @@ public class BorrowController {
 
         return ResponseEntity.ok("Deletado com sucesso.");
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateBorrow(@PathVariable int id) {
+        Optional<Borrow> maybeBorrow = borrows.stream()
+                .filter(borrow -> borrow.getId() == id)
+                .findFirst();
+
+        if (maybeBorrow.isEmpty()) {
+            return ResponseEntity.badRequest().body("Empréstimo não encontrado.");
+        }
+
+        maybeBorrow.get().getBook().setBorrowed(false);
+
+        maybeBorrow.get().devolution();
+        return ResponseEntity.ok("Livro devolvido com sucesso.");
+
+
+    }
 }
